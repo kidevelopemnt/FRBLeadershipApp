@@ -32,7 +32,7 @@ class EventView(ft.Column):
         self.controls.clear()
         self.cards.clear()
 
-        self.attendance_cache = {
+        self.attendance_records = {
             record.user.id: record
             for record in AttendanceRecord.objects.filter(
                 event=self.event
@@ -210,18 +210,14 @@ class EventView(ft.Column):
 
     def update_card(self, user, status):
         for card in self.cards:
-            print(card[2])
             if card[0].id == user.id:
                 card[2].value = status
-                card[1].bgcolor = self.status_color(status)
+                card[1].content.bgcolor = self.status_color(status)
 
                 card[2].update()
                 card[1].update()
 
                 break
-
-        else:
-            print("Never found")
 
     def filtered_users(self):
         users = User.objects.all()
@@ -243,7 +239,7 @@ class EventView(ft.Column):
         return filtered
 
     def get_status(self, user):
-        record = self.attendance_cache.get(
+        record = self.attendance_records.get(
             user.id
         )
 
@@ -274,20 +270,16 @@ class EventView(ft.Column):
 
         dropdown.update()
 
-    def change_status(self, user, status):
-        records = AttendanceRecord.objects.filter(
-            user=user,
-            event=self.event
-        )
+    def change_status(self, user, status, refresh=True):
+        record = self.attendance_records.get(user.id)
 
         if status == "Not Recorded":
-            if records:
-                records[0].delete()
+            if record:
+                record.delete()
 
             return
 
-        if records:
-            record = records[0]
+        if record:
             record.status = status
 
         else:
@@ -300,7 +292,8 @@ class EventView(ft.Column):
 
         record.save()
 
-        self.update_card(user, status)
+        if refresh:
+            self.update_card(user, status)
 
     def mark_all_present(self, e):
 
@@ -319,11 +312,15 @@ class EventView(ft.Column):
 
 
     def mark_all(self, status):
-        for user in User.objects.all():
+        for user, _, _, _ in self.cards:
             self.change_status(
                 user,
-                status
+                status,
+                refresh=False
             )
+
+        self.build()
+        self.update()
 
     def status_color(self, status):
         colors = {
