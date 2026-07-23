@@ -1,5 +1,6 @@
 import flet as ft
 
+from db_system import Database
 from models import User, AttendanceRecord, Tag
 from settings import DT_FORMAT
 
@@ -296,7 +297,6 @@ class EventView(ft.Column):
             self.update_card(user, status)
 
     def mark_all_present(self, e):
-
         self.mark_all(
             "Present"
         )
@@ -310,8 +310,28 @@ class EventView(ft.Column):
     def mark_all_not_recorded(self, e):
         self.mark_all("Not Recorded")
 
-
     def mark_all(self, status):
+        if status == "Not Recorded":
+            Database.execute(
+                """
+                DELETE FROM attendancerecord
+                WHERE event=?
+                """,
+                (self.event.id,)
+            )
+
+            self.attendance_records.clear()
+
+            for user, _, _, _ in self.cards:
+                self.update_card(
+                    user,
+                    "Not Recorded"
+                )
+
+            return
+
+        Database.begin()
+
         for user, _, _, _ in self.cards:
             self.change_status(
                 user,
@@ -319,8 +339,13 @@ class EventView(ft.Column):
                 refresh=False
             )
 
-        self.build()
-        self.update()
+        Database.commit()
+
+        for user, _, _, _ in self.cards:
+            self.update_card(
+                user,
+                status
+            )
 
     def status_color(self, status):
         colors = {
