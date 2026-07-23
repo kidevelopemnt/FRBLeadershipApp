@@ -38,18 +38,77 @@ class Model:
     fields = {}
     table_name = None
 
+    _list_fields = {}  # key: References
+
     def __init__(self, **kwargs):
-        self.id = kwargs.get(
-            "id",
-            str(uuid.uuid4())
-        )
+        self.id = kwargs.get("id", None)
 
         for field, default in self.fields.items():
+
+            # Many-to-many
+            if isinstance(default, list) and len(default) == 1 and issubclass(default[0], Model):
+
+                reference = default[0]
+
+                value = kwargs.get(field, [])
+
+                if isinstance(value, str):
+                    value = self._load_many_to_many(
+                        reference,
+                        value
+                    )
+
+                setattr(
+                    self,
+                    field,
+                    value
+                )
+
+                continue
+
+            # Foreign key
+            if isinstance(default, type) and issubclass(default, Model):
+                value = kwargs.get(field)
+
+                if value is not None and not isinstance(value, Model):
+                    value = default.objects.get(
+                        id=value
+                    )
+
+                setattr(
+                    self,
+                    field,
+                    value
+                )
+
+                continue
+
+            # Normal field
             setattr(
                 self,
                 field,
                 kwargs.get(field, default)
             )
+
+    def _load_many_to_many(
+            self,
+            model,
+            value
+    ):
+
+        if not value:
+            return []
+
+        ids = value.split(",")
+
+        if "0" in ids and len(ids) == 1:
+            # 0 represents ALL
+            ids = [obj.id for obj in model.objects.all()]
+
+        return [
+            model.objects.get(id=id)
+            for id in ids
+        ]
 
 
     def save(self):
@@ -93,7 +152,6 @@ class Model:
         {update}
         """
 
-
         Database.execute(
             query,
             values
@@ -103,13 +161,15 @@ class Model:
     def generate_table(cls):
         if not cls.table_name:
             cls.table_name = cls.__name__.lower()
-            print(cls.table_name)
 
         columns = [
             "id INTEGER PRIMARY KEY AUTOINCREMENT"
         ]
 
         for field, default in cls.fields.items():
+            if type(default) is list:
+                cls._list_fields[field] = None
+
             columns.append(
                 f"{field} TEXT"
             )
@@ -135,24 +195,29 @@ class Model:
             (self.id,)
         )
 
-
     def _serialize(self, value):
 
         if isinstance(value, datetime):
             return value.isoformat()
 
+        if isinstance(value, Model):
+            return str(value.id)
+
         if isinstance(value, list):
             return ",".join(
                 [
-                    item.id
+                    str(item.id)
                     for item in value
                 ]
             )
 
-        if isinstance(value, Model):
-            return value.id
+        if type(value) is bool:
+            value = int(value)
 
-        return value
+        elif value is None:
+            value = ""
+
+        return str(value)
 
 
     @classmethod
@@ -167,16 +232,12 @@ class Manager:
     def __init__(self, model):
         self.model = model
 
-
-
     def create(self, **kwargs):
 
         obj = self.model(**kwargs)
         obj.save()
 
         return obj
-
-
 
     def all(self):
 

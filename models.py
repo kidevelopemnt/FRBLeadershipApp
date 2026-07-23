@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from db_system import Model, Manager
+from settings import DT_FORMAT
 
 
 class Tag(Model):
@@ -15,8 +16,8 @@ class User(Model):
         "username": None,
         "password": None,
         "name": "",
-        "tags": [],              # List[Tag]
-        "managing_tags": [],     # List[Tag]   0 means ALL
+        "tags": [Tag],              # List[Tag]   0 means ALL
+        "managing_tags": [Tag],     # List[Tag]   0 means ALL
         "active": True,
     }
 
@@ -38,13 +39,29 @@ class Event(Model):
         "name": "",
         "category": CATEGORY_REHEARSAL,
         "location": "",
-        "start_dt": None,        # datetime
-        "end_dt": None,          # datetime
+        "_start_dt": None,       # datetime
+        "_end_dt": None,         # datetime
         "notes": "",
         "created_by": None,      # User
-        "tags": [],              # List[Tag]
+        "tags": [Tag],              # List[Tag]   0 means ALL
         "mandatory": True,
     }
+
+    @property
+    def start_dt(self):
+        return datetime.strptime(self._start_dt, DT_FORMAT)
+
+    @start_dt.setter
+    def start_dt(self, value):
+        self._start_dt = value
+
+    @property
+    def end_dt(self):
+        return datetime.strptime(self._end_dt, DT_FORMAT)
+
+    @end_dt.setter
+    def end_dt(self, value):
+        self._end_dt = value
 
 
 class AttendanceRecord(Model):
