@@ -30,6 +30,7 @@ class EventView(ft.Column):
 
     def build(self):
         self.controls.clear()
+        self.cards.clear()
 
         self.attendance_cache = {
             record.user.id: record
@@ -71,6 +72,11 @@ class EventView(ft.Column):
                         icon=ft.Icons.CLOSE,
                         # text="Mark All Absent",
                         on_click=self.mark_all_absent
+                    ),
+
+                    ft.FloatingActionButton(
+                        icon=ft.Icons.DELETE,
+                        on_click=self.mark_all_not_recorded
                     )
                 ]
             )
@@ -131,23 +137,19 @@ class EventView(ft.Column):
 
                 content=ft.Container(
                     padding=15,
-
                     on_click=lambda e:
                         self.cycle_status(
                             user,
                             dropdown
                         ),
-
                     content=ft.Column(
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-
                         controls=[
                             ft.Text(
                                 user.name,
                                 size=18,
                                 weight=ft.FontWeight.BOLD
                             ),
-
                             ft.Row(
                                 wrap=True,
                                 alignment= ft.MainAxisAlignment.CENTER,
@@ -160,22 +162,18 @@ class EventView(ft.Column):
                                     for tag in user.tags
                                 ]
                             ),
-
                             ft.Divider(),
-
                             ft.Text(
                                 status,
                                 size=20,
                                 weight=ft.FontWeight.BOLD
                             ),
-
                             dropdown
                         ]
                     )
                 )
             )
         )
-
 
         self.cards.append(
             (user, card, dropdown, status)
@@ -212,15 +210,18 @@ class EventView(ft.Column):
 
     def update_card(self, user, status):
         for card in self.cards:
+            print(card[2])
             if card[0].id == user.id:
-                card[3].value = status
-                card[1].bgcolor = (
-                    self.status_color(status)
-                )
-                card[3].update()
+                card[2].value = status
+                card[1].bgcolor = self.status_color(status)
+
+                card[2].update()
                 card[1].update()
 
                 break
+
+        else:
+            print("Never found")
 
     def filtered_users(self):
         users = User.objects.all()
@@ -273,50 +274,33 @@ class EventView(ft.Column):
 
         dropdown.update()
 
-    def change_status(
-        self,
-        user,
-        status
-    ):
-
+    def change_status(self, user, status):
         records = AttendanceRecord.objects.filter(
             user=user,
             event=self.event
         )
 
-
         if status == "Not Recorded":
-
             if records:
                 records[0].delete()
 
             return
 
         if records:
-
             record = records[0]
-
             record.status = status
 
         else:
-
             record = AttendanceRecord(
-
                 user=user,
-
                 event=self.event,
-
                 recorded_by=self.user,
-
                 status=status
-
             )
-
 
         record.save()
 
         self.update_card(user, status)
-
 
     def mark_all_present(self, e):
 
@@ -329,6 +313,9 @@ class EventView(ft.Column):
         self.mark_all(
             "Absent"
         )
+
+    def mark_all_not_recorded(self, e):
+        self.mark_all("Not Recorded")
 
 
     def mark_all(self, status):

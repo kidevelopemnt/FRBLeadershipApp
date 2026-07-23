@@ -70,7 +70,7 @@ class Model:
             if isinstance(default, type) and issubclass(default, Model):
                 value = kwargs.get(field)
 
-                if value is not None and not isinstance(value, Model):
+                if value is not None and value != "" and not isinstance(value, Model):
                     value = default.objects.get(
                         id=value
                     )
