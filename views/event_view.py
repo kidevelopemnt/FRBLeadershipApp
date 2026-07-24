@@ -5,7 +5,7 @@ from models import User, AttendanceRecord, Tag
 from settings import DT_FORMAT
 
 
-class EventView(ft.Column):
+class EventView(ft.View):
     STATUSES = [
         "Not Recorded",
         "Present",
@@ -23,8 +23,7 @@ class EventView(ft.Column):
         self.selected_tags = []
 
         super().__init__(
-            expand=True,
-            scroll=ft.ScrollMode.AUTO
+            route=f"/event/{event.id}"
         )
 
         self.build()
@@ -183,7 +182,7 @@ class EventView(ft.Column):
         return card
 
     def tag_filter(self):
-        tags = Tag.objects.all()
+        tags = self.user.managing_tags
 
         return ft.Row(
             wrap=True,

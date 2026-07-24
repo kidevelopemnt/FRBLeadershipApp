@@ -4,9 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c42af102-696c-4b12-8438-7371cfa0d9cd" name="Changes" comment="Some optimizations that didn't work">
+    <list default="true" id="c42af102-696c-4b12-8438-7371cfa0d9cd" name="Changes" comment="Optimizations for Mark All">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/python-app/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/components/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/database.db" beforeDir="false" afterPath="$PROJECT_DIR$/build/python-app/database.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/db_system.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/services/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/settings.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/views/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/views/calendar_view.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/python-app/views/event_view.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/database.db" beforeDir="false" afterPath="$PROJECT_DIR$/database.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/db_system.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/calendar_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/views/calendar_view.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/event_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/views/event_view.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,6 +75,7 @@
     "Python.models.executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "master",
@@ -141,7 +157,15 @@
       <option name="project" value="LOCAL" />
       <updated>1784838931526</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Optimizations for Mark All">
+      <option name="closed" value="true" />
+      <created>1784839463701</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1784839463701</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -160,6 +184,7 @@
     <MESSAGE value="Calendar and event view (BROKEN)" />
     <MESSAGE value="Calendar and event view (BROKEN) Part 2" />
     <MESSAGE value="Some optimizations that didn't work" />
-    <option name="LAST_COMMIT_MESSAGE" value="Some optimizations that didn't work" />
+    <MESSAGE value="Optimizations for Mark All" />
+    <option name="LAST_COMMIT_MESSAGE" value="Optimizations for Mark All" />
   </component>
 </project>
