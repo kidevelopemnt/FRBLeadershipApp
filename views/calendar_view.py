@@ -6,7 +6,7 @@ import calendar
 from models import Event
 
 
-class CalendarView(ft.Column):
+class CalendarView(ft.View):
 
     def __init__(self, page, user):
 
@@ -16,8 +16,7 @@ class CalendarView(ft.Column):
         self.current_date = datetime.now()
 
         super().__init__(
-            expand=True,
-            spacing=10
+            route="/calendar"
         )
 
         self.calendar_grid = ft.Column(
@@ -26,7 +25,11 @@ class CalendarView(ft.Column):
 
         self.build()
 
+    async def open_event(self, event):
 
+        await self.page.push_route(
+            f"/event/{event.id}"
+        )
 
     def build(self, render=False):
         self.controls.clear()

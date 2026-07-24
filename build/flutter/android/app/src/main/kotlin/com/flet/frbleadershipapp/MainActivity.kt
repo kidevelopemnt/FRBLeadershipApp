@@ -1,0 +1,5 @@
+package com.flet.frbleadershipapp
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
